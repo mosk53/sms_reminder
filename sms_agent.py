@@ -12,6 +12,7 @@ log.basicConfig(filename='log.log', level=log.DEBUG, format='%(asctime)s %(messa
 
 
 class reminder_bot():
+    
     def __init__(self) -> None:
         # Database connection
         log.info("Connecting to database")
@@ -24,6 +25,10 @@ class reminder_bot():
         # Twilio connection
         log.info("Creating Twilio client")
         self.client = Client(tw_account_sid, tw_auth_token)
+        # Email connection
+        log.info("Creating email client")
+        self.email_client = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        self.email_client.login(e_sender_email, e_password)
 
     def fetch_rows(self):
         # fetch rows from database
@@ -66,7 +71,18 @@ class reminder_bot():
         log.info("Closing database connection")
         self.db.close()
 
+def send_mail(msg):
+    subject = "SMS Bot crashed"
+    body = msg
+    email_text = f"""\
+    From: {e_sender_email}
+    To: {e_receiver_email}
+    Subject: {subject}
 
+    {body}
+    """
+    observer.email_client.sendmail(e_sender_email, e_receiver_email, email_text)
+    observer.email_client.quit()
 
 if __name__ == "__main__":
     while True:
@@ -79,4 +95,10 @@ if __name__ == "__main__":
         except Exception as e:
             log.error(e)
             log.error("Bot crashed")
-            sleep(86400)
+            # send email
+            try:
+                send_mail(e)
+            except Exception as e:
+                log.error(e)
+                log.error("Failed to send email")
+            sleep(40000)
