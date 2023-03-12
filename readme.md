@@ -5,6 +5,7 @@ The Reminder Bot is a Python script that fetches reminders from a MySQL database
 ## Installation
 
 1. Clone or download this repository.
+
 2. Install the required packages by running the following command: 
 
 `pip install -r requirements.txt`
