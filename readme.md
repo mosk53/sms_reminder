@@ -1,6 +1,9 @@
 # Reminder Bot
 
-The Reminder Bot is a Python script that fetches reminders from a MySQL database, sends them as SMS messages using the Twilio API, and updates the database to indicate that the messages have been sent. This script runs indefinitely and checks the database for reminders once per day.
+The Reminder Bot is a Python script that fetches reminders from a MySQL database, sends them as SMS messages using the Twilio API, and updates the database to indicate that the messages have been sent.
+
+The script operates with three columns: number, message, and called. Whenever it makes a query, it selects an entry and sends the text from the message column to the number in the number column. If this operation is successful, it sets the called column in the row to 0, which ensures that the row will not be displayed in the next query.
+
 
 ## Installation
 
